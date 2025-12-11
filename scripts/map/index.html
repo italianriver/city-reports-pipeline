@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Amsterdam Incident Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+      #map { height: 100vh; width: 100%; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+
+// Leaflet map
+const map = L.map('map').setView([52.37, 4.89], 12);
+
+// Base tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19
+}).addTo(map);
+
+// Load Azure GeoJSON
+const url = "https://storagegemeente.blob.core.windows.net/consumption/reports.geojson?sp=r&st=2025-12-11T17:48:47Z&se=2025-12-12T02:03:47Z&spr=https&sv=2024-11-04&sr=b&sig=saaJaCogmoDzbCK3y3dO0JXcT1a%2BgSdnWlLJ8e7%2FQbw%3D";
+
+// Refresh function
+function loadData() {
+    fetch(url + "&t=" + Date.now()) // timestamp to break cache
+        .then(r => r.json())
+        .then(data => {
+            if (window.layer) map.removeLayer(window.layer);
+
+            window.layer = L.geoJSON(data, {
+                onEachFeature: (f, layer) => {
+                    layer.bindPopup(
+                        `<b>ID:</b> ${f.properties.id}<br>
+                         <b>Problem:</b> ${f.properties.problem}<br>
+                         <b>Priority:</b> ${f.properties.priority}<br>
+                         <b>Date:</b> ${f.properties.reported_on}`
+                    );
+                }
+            }).addTo(map);
+        });
+}
+
+loadData();
+
+// Refresh every 3 hours
+setInterval(loadData, 3 * 60 * 60 * 1000);
+
+</script>
+
+</body>
+</html>
