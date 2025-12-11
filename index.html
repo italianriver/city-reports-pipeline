@@ -72,7 +72,7 @@ function loadData() {
                 },
 
                 onEachFeature: function(feature, layer) {
-                    const p = feature.properties;
+                    const f = feature.properties;
 
                     const popup = `<b>Probleem Nummer:</b> ${f.properties.id}<br>
                          <b>Probleem:</b> ${f.properties.problem}<br>
