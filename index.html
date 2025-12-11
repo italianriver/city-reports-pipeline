@@ -17,7 +17,7 @@
 
 <script>
 // ---------------------
-// 1. INITIALISE MAP
+// 1. Initialise map
 // ---------------------
 const map = L.map('map').setView([52.37, 4.89], 12);
 
@@ -26,40 +26,41 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // ---------------------
-// 2. URL TO YOUR AZURE GEOJSON
+// 2. URL to Azure GeoJSON
 // ---------------------
 const url = "https://storagegemeente.blob.core.windows.net/consumption/reports.geojson?sp=r&st=2025-12-11T18:20:50Z&se=2025-12-12T02:35:50Z&spr=https&sv=2024-11-04&sr=b&sig=D8275tP2Lw2cfhjmCsuhQc3GerHH1n3EYzJfrFVn%2F%2BI%3D";
 
 // ---------------------
-// 3. COLOR FUNCTION
+// 3. Color function based on "priority"
 // ---------------------
 function getColor(priority) {
-    if (!priority) return "#000000"; // fallback
-    priority = priority.toLowerCase();
-    if (priority === "hoog") return "#FF0000";    // red
-    if (priority === "middel") return "#FFA500";  // orange
-    if (priority === "laag") return "#FFD700";    // yellow
+    if (!priority) return "#000000";
+    const p = priority.toLowerCase();
+
+    if (p === "hoog") return "#FF0000";     // red
+    if (p === "middel") return "#FFA500";   // orange
+    if (p === "laag") return "#FFD700";     // yellow
+
     return "#000000";
 }
 
 // ---------------------
-// 4. LOAD + DISPLAY GEOJSON
+// 4. Load + display GeoJSON
 // ---------------------
 function loadData() {
-    fetch(url + "&t=" + Date.now())  // timestamp prevents caching
+    fetch(url + "&t=" + Date.now())
         .then(r => r.json())
         .then(data => {
 
-            // Remove previous layer if exists
-            if (window.layer) {
-                map.removeLayer(window.layer);
-            }
+            // Remove old layer
+            if (window.layer) map.removeLayer(window.layer);
 
             // Add new layer
             window.layer = L.geoJSON(data, {
 
                 pointToLayer: function(feature, latlng) {
-                    const color = getColor(feature.properties.priority);
+                    const props = feature.properties;
+                    const color = getColor(props.priority);
 
                     return L.circleMarker(latlng, {
                         radius: 8,
@@ -72,27 +73,29 @@ function loadData() {
                 },
 
                 onEachFeature: function(feature, layer) {
-                    const f = feature.properties;
+                    const p = feature.properties;
 
-                    const popup = `<b>Probleem Nummer:</b> ${f.properties.id}<br>
-                         <b>Probleem:</b> ${f.properties.problem}<br>
-                         <b>Prioriteit:</b> ${f.properties.priority}<br>
-                         <br>Straatnaam:</b> ${f.properties.street_name}<br>
-                         <b>Huisnummer:</b> ${f.properties.house_number}<br>
-                         <b>Postcode:</b> ${f.properties.postcode}<br>
-                         <b>Datum Gemeld:</b> ${f.properties.reported_on}<br>`;
+                    const popup = `
+                        <b>Probleem Nummer:</b> ${p.id}<br>
+                        <b>Probleem:</b> ${p.problem}<br>
+                        <b>Prioriteit:</b> ${p.priority}<br>
+                        <b>Straatnaam:</b> ${p.street_name}<br>
+                        <b>Huisnummer:</b> ${p.house_number}<br>
+                        <b>Postcode:</b> ${p.postcode}<br>
+                        <b>Datum Gemeld:</b> ${p.reported_on}
+                    `;
 
                     layer.bindPopup(popup);
                 }
 
             }).addTo(map);
-        });
+
+        })
+        .catch(err => console.error("GeoJSON load error:", err));
 }
 
-// First load
 loadData();
 
-// Refresh every 3 hours
 setInterval(loadData, 3 * 60 * 60 * 1000);
 
 </script>
