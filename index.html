@@ -27,6 +27,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Load Azure GeoJSON
 const url = "https://storagegemeente.blob.core.windows.net/consumption/reports.geojson?sp=r&st=2025-12-11T18:05:18Z&se=2025-12-12T02:20:18Z&spr=https&sv=2024-11-04&sr=b&sig=whi6o8Bl%2ByhRMQAB6t97tvcst7PHgD%2FiPoprOocoA7Y%3D";
 
+function getColor(priority) {
+    if (!priority) return "#000000"; // fallback
+    priority = priority.toLowerCase();
+    if (priority === "hoog") return "#FF0000";    // red
+    if (priority === "middel") return "#FFA500";  // orange
+    if (priority === "laag") return "#FFD700";    // yellow
+    return "#000000";
+}
 // Refresh function
 function loadData() {
     fetch(url + "&t=" + Date.now()) // timestamp to break cache
@@ -37,10 +45,13 @@ function loadData() {
             window.layer = L.geoJSON(data, {
                 onEachFeature: (f, layer) => {
                     layer.bindPopup(
-                        `<b>ID:</b> ${f.properties.id}<br>
-                         <b>Problem:</b> ${f.properties.problem}<br>
-                         <b>Priority:</b> ${f.properties.priority}<br>
-                         <b>Date:</b> ${f.properties.reported_on}`
+                        `<b>Probleem Nummer:</b> ${f.properties.id}<br>
+                         <b>Probleem:</b> ${f.properties.problem}<br>
+                         <b>Prioriteit:</b> ${f.properties.priority}<br>
+                          <br>Straatnaam:</b> ${f.properties.street_name}<br>
+                         <b>Huisnummer:</b> ${f.properties.house_number}<br>
+                         <b>Postcode:</b> ${f.properties.postcode}<br>
+                         <b>Datum Gemeld:</b> ${f.properties.reported_on}<br>`
                     );
                 }
             }).addTo(map);
