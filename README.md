@@ -52,10 +52,9 @@ Leaflet website
 → The system must automatically process new incident reports when they become available. 🗹    
 → Raw incident data must be stored safely before any transformations are applied. 🗹  
 → Data must be cleaned and prepared so it can be used reliably. 🗹  
-→ Updates to existing incidents must be handled correctly. 🗹  
-→ Updates to the status must be handled correctly and always be accurate. 🗹  
+→ Updates to the status of incidents must be handled correctly and always be accurate. 🗹  
 → Processed data must be easy to use for visualisation and analysis. 🗹  
-→ The pipeline must be safe to run multiple times without creating duplicate or incorrect results. 🗹  
+→ The pipeline output must be idempotent. It must be safe to run multiple times without incorrect results. 🗹  
 → The overall design must be clear, maintainable and easy to understand. 🗹  
 → The interactive map should allow for manual status change of the report ☐  
 
