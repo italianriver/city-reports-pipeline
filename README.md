@@ -12,7 +12,7 @@ This link uses a temporary access token that expires on 19/12.
 This project demonstrates how an event driven data pipeline can be designed and implemented using the Medaillon layered architecture, with clear separation between ingestion, transformation, governance and consumption to support reliable and maintainable data processing.
 
 ## Project Architecture
-![High level architecture](docs/city_reports_architecture.png)
+![High level architecture](docs/architecture_high_level.png)
 
 Source generator script  
 → This script serves for demonstration purposes and generates random fake reports and writes them in JSON format into ADLS in the source layer  
