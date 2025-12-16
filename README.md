@@ -94,7 +94,7 @@ Leaflet is used as the map to display the reports, hosted on GitHub Pages.
 
 The pipeline applies SCD Type 1 behaviour by overwriting existing records for the same incident identifier using Delta Lake merge operations. A status_updated_at column is maintained to indicate when the current state of a case was last updated.
 
-### Known limitation
+## Known limitation
 
 In some cases the postcode field may be missing due to incomplete data in the national BAG source. This is a known limitation of the BAG source data rather than the processing logic. The decision to still process and display these reports is intentional, as the geographic location can still be resolved correctly and the incident remains usable for the map.  
 
