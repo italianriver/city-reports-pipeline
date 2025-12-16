@@ -4,7 +4,7 @@ This repository contains an end to end data engineering project that simulates i
 
 The pipeline is event driven. When a new JSON file arrives in the source container, the Bronze task is triggered automatically. Silver, Gold and Consumption then run as chained tasks within a Databricks Job.
 
-[View the incident reports map](https://italianriver.github.io/pages-test/)  
+[View the incident reports map](https://italianriver.github.io/city-reports-pipeline/)  
 This link uses a temporary access token that expires on 19/12.  
 
 ## What this project demonstrates
